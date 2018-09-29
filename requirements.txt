@@ -1,0 +1,2 @@
+git+git://github.com/bezineb5/reverse-geocoder.git
+git+git://github.com/bezineb5/pygotu.git
