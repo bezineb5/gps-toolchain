@@ -68,7 +68,7 @@ def _geotag_photos(gpx_file: Path, photos_path: Path) -> None:
                         capture_output=True,
                         shell=True)
     log.info(result)
-    result.check_returncode()
+    # result.check_returncode()
     log.info(result.stdout)
 
     return
