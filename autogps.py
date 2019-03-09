@@ -21,7 +21,7 @@ def _parse_arguments():
 
 
 def _generate_gpx_filename(photos_path: Path) -> Path:
-    filename = photos_path.stem
+    filename = photos_path.name
     if not filename:
         raise Exception("Unable to compute filename from photo path")
     # Add extension
