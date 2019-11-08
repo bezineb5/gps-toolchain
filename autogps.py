@@ -73,7 +73,7 @@ def _geotag_photos(gpx_file: Path, photos_path: Path) -> None:
     log.info(result.stdout)
 
     # DNG with camera set to UTC timezone
-    # exiftool -geotag "$GPX_FILE" '-geotime<${DateTimeUTC}+00:00' -P *.ORF -srcfile %d%f.xmp -srcfile @ -o %d%f.xmp
+    # exiftool -geotag "$GPX_FILE" '-geotime<${DateTimeOriginal}+00:00' -P *.DNG -srcfile %d%f.xmp -srcfile @ -o %d%f.xmp
     result = subprocess.run(" ".join(['exiftool', '-geotag',
                         '"' + str(gpx_file) + '"',
                         "'-geotime<${DateTimeOriginal}+00:00'",
