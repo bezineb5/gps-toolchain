@@ -17,7 +17,7 @@
 from distutils.core import setup
 
 setup(name="gps-toolchain",
-      version="0.1",
+      version="0.2",
       description="Reverse geocoding library for photos",
       license="MIT",
       author="Benjamin Bezine",

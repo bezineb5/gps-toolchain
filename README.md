@@ -32,3 +32,18 @@ It will create a GPX file named "vacation-photos.gpox" in /path/to/my/vacation-p
 In the script directory of this repository, there are 2 scripts to make it easier to use in Capture One 11 (Mac OS only):
 * Clear GPS content: clears the content of the iGotU device
 * Geotag for GPS: calls the script to geotag an entire session. You have to select an image first, so that the script knows where the images are located on the disk. To enable backup, set the variable "backupPath" to your backup directory.
+
+## Build wheel
+```
+python3.11 setup.py bdist_wheel
+```
+
+## Install wheel
+```
+pip install dist/gps-toolchain-0.2-py3-none-any.whl
+```
+
+## Run
+```
+python3 autogps.py --backup /my/backup/dir /path/to/my/vacation-photos
+```

@@ -1,4 +1,3 @@
-set backupPath to ""
 set parentImageFile to ""
 
 -- Retrieve the current image selected in Capture One
@@ -18,16 +17,14 @@ end if
 set parentImagePath to (parentFolderOf for parentImageFile)
 
 -- Call the python script
-set commandLine to "eval `/usr/libexec/path_helper -s`; python3 -m autogps"
-if (parentImageFile is not equal to "") then
-	set commandLine to (commandLine & " --backup \"" & backupPath & "\"")
-end if
-set commandLine to (commandLine & " \"" & parentImagePath & "\"")
+set commandLine to "eval `/usr/libexec/path_helper -s`; python3 -m geocode"
+set commandLine to (commandLine & " \"" & parentImagePath & "/*.xmp\"")
 
+display dialog commandLine
 do shell script commandLine
 
 -- Notify the user
-display notification "Images successfully geotagged"
+display notification "Images successfully geocoded"
 
 -- From: https://stackoverflow.com/questions/30823900/getting-directory-of-input-file-applescript
 to parentFolderOf for pxPath
@@ -36,4 +33,3 @@ to parentFolderOf for pxPath
 	set {parFol, text item delimiters} to {text 1 thru text item -(i + 1) of pxPath, tids}
 	return parFol
 end parentFolderOf
-
