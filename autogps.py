@@ -6,6 +6,7 @@ import subprocess
 
 import gt2gpx
 import geocode
+import nmea2gpx
 
 log = logging.getLogger(__name__)
 
@@ -14,6 +15,11 @@ def _parse_arguments():
     parser = argparse.ArgumentParser(description="Automated GPS Toolchain")
     parser.add_argument(
         "photos_path", help="Path of the directory containing the photos"
+    )
+    parser.add_argument(
+        "--nmea-input",
+        help="Path of the NMEA file(s) to convert to GPX. This can be a file pattern to convert multiple files in one go. they will be processed in alphabetical order.",
+        default=None,
     )
     parser.add_argument("--backup", "-b", dest="backup_path", help="Backup path")
     parser.add_argument(
@@ -132,22 +138,42 @@ def _reverse_geocode(photos_path: Path) -> None:
     log.info("Finished geocoding")
 
 
+def _process_download(arguments, dest_gpx: Path):
+    # Case 1: the GPX file already exist, use it.
+    if arguments.skip_download:
+        if not dest_gpx.exists():
+            raise Exception(f"GPX file not found at expected location: {dest_gpx}")
+        log.info("Using existing GPX file: %s", dest_gpx)
+        return
+
+    if dest_gpx.exists():
+        raise Exception("GPX track already exists")
+
+    # Case 2: use NMEA files to generate GPX file.
+    if arguments.nmea_input:
+        # RAW output is a NMEA file alongside the GPX file.
+        raw_output = dest_gpx.with_suffix(".nmea")
+        nmea2gpx.process_files(
+            input_files=[arguments.nmea_input],
+            output_file=dest_gpx,
+            delete_source=False,
+            raw_output=raw_output
+        )
+
+        return
+
+    # Case 3: download from iGotU GPX device.
+    _download_track(dest_gpx)
+
+
 def main() -> None:
     arguments = _parse_arguments()
     logging.basicConfig(level=arguments.verbose)
     photos_path = Path(arguments.photos_path)
 
     dest_gpx = _generate_gpx_filename(photos_path)
-    
-    if arguments.skip_download:
-        if not dest_gpx.exists():
-            raise Exception(f"GPX file not found at expected location: {dest_gpx}")
-        log.info("Using existing GPX file: %s", dest_gpx)
-    else:
-        if dest_gpx.exists():
-            raise Exception("GPX track already exists")
-        _download_track(dest_gpx)
-        
+
+    _process_download(arguments, dest_gpx)
     _backup(dest_gpx, arguments.backup_path)
     _geotag_photos(dest_gpx, photos_path)
     _reverse_geocode(photos_path)
