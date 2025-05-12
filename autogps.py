@@ -154,7 +154,7 @@ def _process_download(arguments, dest_gpx: Path):
         # RAW output is a NMEA file alongside the GPX file.
         raw_output = dest_gpx.with_suffix(".nmea")
         nmea2gpx.process_files(
-            input_files=[arguments.nmea_input],
+            input_patterns=[arguments.nmea_input],
             output_file=dest_gpx,
             delete_source=False,
             raw_output=raw_output
