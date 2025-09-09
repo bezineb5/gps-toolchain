@@ -157,7 +157,8 @@ def _process_download(arguments, dest_gpx: Path):
             input_patterns=[arguments.nmea_input],
             output_file=dest_gpx,
             delete_source=False,
-            raw_output=raw_output
+            raw_output=raw_output,
+            compact=True
         )
 
         return
